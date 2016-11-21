@@ -1,12 +1,12 @@
-var chai = require('chai');
-var expect = require('chai').expect;
-var babysitter = require('../babysitter.js');
+const chai = require('chai');
+const expect = require('chai').expect;
+const babysitter = require('../babysitter.js');
 
 describe('babysitter calculate rates', function () {
 
   describe('test pay rate from start to bedtime', function () {
     it('should calculate for base rate', function () {
-      var pay = babysitter.calculatePay({
+      let pay = babysitter.calculatePay({
         'start_time': 18,
         'bed_time': 19,
         'end_time': 19
@@ -15,8 +15,8 @@ describe('babysitter calculate rates', function () {
       expect(pay).to.equal(12);
     });
 
-    it('should calculate for multiple base rates', function() {
-      var pay = babysitter.calculatePay({
+    it('should calculate for multiple base rates', function () {
+      let pay = babysitter.calculatePay({
         'start_time': 17,
         'bed_time': 23,
         'end_time': 23
@@ -26,13 +26,13 @@ describe('babysitter calculate rates', function () {
     });
   });
 
-  describe('test pay rate from bedtime to midnight', function () { 
+  describe('test pay rate from bedtime to midnight', function () {
     it('should calculate bedtime rate', function () {
 
-      var pay = babysitter.calculatePay({
-        'start_time' : 23,
-        'bed_time' : 23,
-        'end_time' : 0
+      let pay = babysitter.calculatePay({
+        'start_time': 23,
+        'bed_time': 23,
+        'end_time': 0
       });
 
       expect(pay).to.equal(8);
@@ -41,35 +41,37 @@ describe('babysitter calculate rates', function () {
 
   });
 
-  describe('test valid time inputs', function() {
 
-    it('should reject if no start_time provided', function(){
-      var pay = babysitter.calculatePay({
+
+  describe('test valid time inputs', function () {
+
+    it('should reject if no start_time provided', function () {
+      let pay = babysitter.calculatePay({
         'bed_time': 1
       });
 
       expect(pay).to.equal(-1);
     });
 
-    it('should reject if no end_time provided', function(){
-      var pay = babysitter.calculatePay({
+    it('should reject if no end_time provided', function () {
+      let pay = babysitter.calculatePay({
         'end_time': 18
       });
 
       expect(pay).to.equal(-1);
     });
 
-    it('should reject start time before 17', function() {
-      var pay = babysitter.calculatePay({
+    it('should reject start time before 17', function () {
+      let pay = babysitter.calculatePay({
         'start_time': 16
       });
 
       expect(pay).to.equal(-1);
     });
 
-    it('should reject bed time after midnight', function() {
+    it('should reject bed time after midnight', function () {
 
-      var pay = babysitter.calculatePay({
+      let pay = babysitter.calculatePay({
         'bed_time': 1
       });
 

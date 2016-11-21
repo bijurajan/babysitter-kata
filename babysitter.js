@@ -1,49 +1,66 @@
 module.exports = {
-  calculatePay: function(payLoad) {
+    calculatePay: function (payLoad) {
 
-    const midnightTime = 24;
+        if (!validateInputs(payLoad)) {
+            return -1;
+        }
 
-    const baseRate = 12;
-    const bedtimeRate = 8;
-    const midnightRate = 16;
+        const midnightTime = 24;
 
-    if(!this.validateInputs(payLoad)){
-        return -1;
+        const bedtimeRate = 8;
+        const midnightRate = 16;
+
+        adjustEndtimePastMidnight(payLoad);
+
+        let totalPayment = calculateBasePayment(payLoad);
+
+        if (payLoad.end_time > payLoad.bed_time) {
+
+            totalPayment += calculateBedtimeAndMidnightPayment(payLoad);
+        }
+
+        return totalPayment;
     }
 
-    if(payLoad.end_time >= 0 && payLoad.end_time <= 4) {
-        payLoad.end_time += midnightTime;
-    }
+};
 
-    var beforeBedtimeHours = payLoad.bed_time - payLoad.start_time;
-
-    var totalPayment = 0;
-
-    if(payLoad.end_time > payLoad.bed_time) {
-        var afterBedtimeToMidnightHours = midnightTime - payLoad.bed_time;
-        var afterMidnightHours = payLoad.end_time - midnightTime;
-
-        totalPayment += (afterBedtimeToMidnightHours * bedtimeRate) + (afterMidnightHours * midnightRate);
-    }
-
-    totalPayment += (beforeBedtimeHours * baseRate);
-    
-
-    return totalPayment;
-  },
-
-  validateInputs : function(payLoad){
-    if(!('start_time' in payLoad) || !('end_time' in payLoad)){
+function validateInputs(payLoad) {
+    if (!('start_time' in payLoad) || !('end_time' in payLoad)) {
         return false;
     }
 
-    if(payLoad.start_time < 17) {
+    if (payLoad.start_time < 17) {
         return false;
     }
 
-    if(payLoad.bed_time > 0 && payLoad.bed_time < 17) {
+    if (payLoad.bed_time > 0 && payLoad.bed_time < 17) {
         return false;
     }
     return true;
-  }
-};
+}
+
+function adjustEndtimePastMidnight(payLoad) {
+    const midnightTime = 24;
+    if (payLoad.end_time >= 0 && payLoad.end_time <= 4) {
+        payLoad.end_time += midnightTime;
+    }
+}
+
+function calculateBasePayment(payLoad) {
+    const baseRate = 12;
+
+    let beforeBedtimeHours = payLoad.bed_time - payLoad.start_time;
+    return (beforeBedtimeHours * baseRate);
+}
+
+function calculateBedtimeAndMidnightPayment(payLoad) {
+
+    const midnightTime = 24;
+    const midnightRate = 16;
+    const bedtimeRate = 8;
+
+    let afterBedtimeToMidnightHours = midnightTime - payLoad.bed_time;
+    let afterMidnightHours = payLoad.end_time - midnightTime;
+
+    return (afterBedtimeToMidnightHours * bedtimeRate) + (afterMidnightHours * midnightRate);;
+}
