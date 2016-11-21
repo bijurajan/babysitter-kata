@@ -1,22 +1,14 @@
 module.exports = {
     calculatePay: function (payLoad) {
-
         if (!validateInputs(payLoad)) {
             return -1;
         }
 
-        const midnightTime = 24;
-
-        const bedtimeRate = 8;
-        const midnightRate = 16;
-
         adjustEndtimePastMidnight(payLoad);
-
         let totalPayment = calculateBasePayment(payLoad);
 
         if (payLoad.end_time > payLoad.bed_time) {
-
-            totalPayment += calculateBedtimeAndMidnightPayment(payLoad);
+            totalPayment += calculateBedtimePayment(payLoad) + calculateMidnightPayment(payLoad);
         }
 
         return totalPayment;
@@ -53,14 +45,18 @@ function calculateBasePayment(payLoad) {
     return (beforeBedtimeHours * baseRate);
 }
 
-function calculateBedtimeAndMidnightPayment(payLoad) {
+function calculateBedtimePayment(payLoad) {
+    const midnightTime = 24;
+    const bedtimeRate = 8;
+    let afterBedtimeToMidnightHours = midnightTime - payLoad.bed_time;
 
+    return (afterBedtimeToMidnightHours * bedtimeRate);
+}
+
+function calculateMidnightPayment(payLoad) {
     const midnightTime = 24;
     const midnightRate = 16;
-    const bedtimeRate = 8;
-
-    let afterBedtimeToMidnightHours = midnightTime - payLoad.bed_time;
     let afterMidnightHours = payLoad.end_time - midnightTime;
 
-    return (afterBedtimeToMidnightHours * bedtimeRate) + (afterMidnightHours * midnightRate);;
+    return (afterMidnightHours * midnightRate);
 }
