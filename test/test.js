@@ -29,4 +29,19 @@ describe('babysitter calculate rates', function () {
       done();
     });
   });
+
+  describe('test valid time inputs', function(done) {
+
+    it('should reject start time before 17', function(done) {
+
+      var pay = babysitter.calculatePay({
+        'start_time': 16
+      });
+
+      expect(pay).to.equal(-1);
+
+      done();
+    });
+
+  });
 });
