@@ -1,5 +1,7 @@
 module.exports = {
   calculatePay: function(payLoad) {
-    return 24
+    var hours = payLoad.bed_time - payLoad.start_time;
+
+    return (hours * 12);
   }
 };
