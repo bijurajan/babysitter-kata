@@ -41,6 +41,20 @@ describe('babysitter calculate rates', function () {
 
   });
 
+  describe('test pay rate from midnight to endtime', function () {
+      it('should calculate midnight rate', function () {
+
+        let pay = babysitter.calculatePay({
+          'start_time': 0,
+          'bed_time': 0,
+          'end_time': 1
+        });
+
+        expect(pay).to.equal(16);
+
+      });
+
+    });
 
 
   describe('test valid time inputs', function () {

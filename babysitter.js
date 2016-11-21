@@ -4,7 +4,7 @@ module.exports = {
             return -1;
         }
 
-        adjustEndtimePastMidnight(payLoad);
+        adjustTimesPastMidnight(payLoad);
         let totalPayment = calculateBasePayment(payLoad);
 
         if (payLoad.end_time > payLoad.bed_time) {
@@ -21,7 +21,7 @@ function validateInputs(payLoad) {
         return false;
     }
 
-    if (payLoad.start_time < 17) {
+    if (payLoad.start_time < 17 && payLoad.start_time > 4) {
         return false;
     }
 
@@ -31,10 +31,18 @@ function validateInputs(payLoad) {
     return true;
 }
 
-function adjustEndtimePastMidnight(payLoad) {
+function adjustTimesPastMidnight(payLoad) {
     const midnightTime = 24;
     if (payLoad.end_time >= 0 && payLoad.end_time <= 4) {
         payLoad.end_time += midnightTime;
+    }
+
+    if (payLoad.start_time >= 0 && payLoad.start_time <= 4) {
+        payLoad.start_time += midnightTime;
+    }
+
+    if (payLoad.bed_time >= 0 && payLoad.bed_time <= 4) {
+        payLoad.bed_time += midnightTime;
     }
 }
 
