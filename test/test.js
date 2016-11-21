@@ -47,6 +47,18 @@ describe('babysitter calculate rates', function () {
         let pay = babysitter.calculatePay({
           'start_time': 0,
           'bed_time': 0,
+          'end_time': 4
+        });
+
+        expect(pay).to.equal(64);
+
+      });1
+
+      it('should calculate multiple midnight rates', function () {
+
+        let pay = babysitter.calculatePay({
+          'start_time': 0,
+          'bed_time': 0,
           'end_time': 1
         });
 
@@ -82,6 +94,15 @@ describe('babysitter calculate rates', function () {
 
       expect(pay).to.equal(-1);
     });
+
+    it('should reject start time after 4, but before 17', function () {
+      let pay = babysitter.calculatePay({
+        'start_time': 5
+      });
+
+      expect(pay).to.equal(-1);
+    });
+
 
     it('should reject bed time after midnight', function () {
 
