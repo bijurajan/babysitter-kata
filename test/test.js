@@ -4,43 +4,77 @@ var babysitter = require('../babysitter.js');
 
 describe('babysitter calculate rates', function () {
 
-  describe('test pay rate from start to bedtime', function (done) {
-    it('should calculate from 18 to 20', function (done) {
-
+  describe('test pay rate from start to bedtime', function () {
+    it('should calculate for base rate', function () {
       var pay = babysitter.calculatePay({
         'start_time': 18,
-        'bed_time': 20
+        'bed_time': 19,
+        'end_time': 19
       });
 
-      expect(pay).to.equal(24);
-
-      done();
+      expect(pay).to.equal(12);
     });
 
-    it('should calculate from 17 to 23', function(done) {
-
+    it('should calculate for multiple base rates', function() {
       var pay = babysitter.calculatePay({
         'start_time': 17,
-        'bed_time': 23
+        'bed_time': 23,
+        'end_time': 23
       });
 
       expect(pay).to.equal(72);
-
-      done();
     });
   });
 
-  describe('test valid time inputs', function(done) {
+  describe('test pay rate from bedtime to midnight', function () { 
+    it('should calculate bedtime rate', function () {
 
-    it('should reject start time before 17', function(done) {
+      var pay = babysitter.calculatePay({
+        'start_time' : 23,
+        'bed_time' : 23,
+        'end_time' : 0
+      });
 
+      expect(pay).to.equal(8);
+
+    });
+
+  });
+
+  describe('test valid time inputs', function() {
+
+    it('should reject if no start_time provided', function(){
+      var pay = babysitter.calculatePay({
+        'bed_time': 1
+      });
+
+      expect(pay).to.equal(-1);
+    });
+
+    it('should reject if no end_time provided', function(){
+      var pay = babysitter.calculatePay({
+        'end_time': 18
+      });
+
+      expect(pay).to.equal(-1);
+    });
+
+    it('should reject start time before 17', function() {
       var pay = babysitter.calculatePay({
         'start_time': 16
       });
 
       expect(pay).to.equal(-1);
+    });
 
-      done();
+    it('should reject bed time after midnight', function() {
+
+      var pay = babysitter.calculatePay({
+        'bed_time': 1
+      });
+
+      expect(pay).to.equal(-1);
+
     });
 
   });
